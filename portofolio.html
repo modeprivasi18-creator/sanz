@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lenzxy - Platform Admin & User (Fixed Version)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .theme-light { --bg-primary: #ffffff; --bg-secondary: #f8fafc; --text-primary: #1f2937; --text-secondary: #6b7280; --border: #e5e7eb; --accent: #3b82f6; }
+        .theme-dark { --bg-primary: #0f172a; --bg-secondary: #1e293b; --text-primary: #f1f5f9; --text-secondary: #cbd5e1; --border: #334155; --accent: #06b6d4; }
+        .theme-ocean { --bg-primary: #0c4a6e; --bg-secondary: #075985; --text-primary: #e0f2fe; --text-secondary: #7dd3fc; --border: #0369a1; --accent: #38bdf8; }
+        .theme-forest { --bg-primary: #14532d; --bg-secondary: #166534; --text-primary: #dcfce7; --text-secondary: #86efac; --border: #16a34a; --accent: #22c55e; }
+        .theme-sunset { --bg-primary: #7c2d12; --bg-secondary: #9a3412; --text-primary: #fed7aa; --text-secondary: #fdba74; --border: #ea580c; --accent: #f97316; }
+        .theme-purple { --bg-primary: #581c87; --bg-secondary: #6b21a8; --text-primary: #f3e8ff; --text-secondary: #c4b5fd; --border: #7c3aed; --accent: #8b5cf6; }
+        
+        body { 
+            background-color: var(--bg-primary); 
+            color: var(--text-primary); 
+            transition: all 0.3s ease;
+        }
+        .bg-theme { background-color: var(--bg-primary); }
+        .bg-theme-secondary { background-color: var(--bg-secondary); }
+        .text-theme { color: var(--text-primary); }
+        .text-theme-secondary { color: var(--text-secondary); }
+        .border-theme { border-color: var(--border); }
+        
+        .sidebar-item {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .sidebar-item:hover {
+            background-color: var(--bg-secondary);
+            transform: translateX(4px);
+        }
+        .sidebar-item.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+    </style>
+</head>
+<body class="theme-light">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Lenzxy</h1>
+                <p class="text-gray-600">Platform Admin & User Management</p>
+                <div class="mt-2 text-xs text-green-600 font-medium">✅ Fixed Version - No VIP Bugs</div>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="loginForm">
+                <h2 class="text-2xl font-semibold mb-6 text-center text-gray-800">Masuk</h2>
+                <form onsubmit="handleLogin(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Email</label>
+                        <input type="email" id="loginEmail" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Password</label>
+                        <input type="password" id="loginPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-200 font-medium">Masuk</button>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600 text-sm">Belum punya akun?</p>
+                    <button onclick="showRegisterForm()" class="mt-2 text-blue-600 hover:text-blue-700 font-medium">Daftar Sekarang</button>
+                </div>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="registerForm" class="hidden">
+                <h2 class="text-2xl font-semibold mb-6 text-center text-gray-800">Daftar Akun Baru</h2>
+                <form onsubmit="handleRegister(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Nama Lengkap</label>
+                        <input type="text" id="registerName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Email</label>
+                        <input type="email" id="registerEmail" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Password</label>
+                        <input type="password" id="registerPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition duration-200 font-medium">Daftar</button>
+                </form>
+                
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600 text-sm">Sudah punya akun?</p>
+                    <button onclick="showLoginForm()" class="mt-2 text-blue-600 hover:text-blue-700 font-medium">Masuk Sekarang</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="hidden min-h-screen flex">
+        <!-- Sidebar -->
+        <div class="w-64 bg-theme-secondary border-r border-theme shadow-lg">
+            <div class="p-6 border-b border-theme">
+                <h1 class="text-2xl font-bold text-theme">Lenzxy</h1>
+                <p class="text-theme-secondary text-sm mt-1" id="userWelcome">Selamat datang!</p>
+            </div>
+            
+            <nav class="mt-6">
+                <div class="sidebar-item px-6 py-3 text-theme active" onclick="showPage('beranda')">
+                    <i class="fas fa-home mr-3"></i>Beranda
+                </div>
+                <div class="sidebar-item px-6 py-3 text-theme" onclick="showPage('games')">
+                    <i class="fas fa-gamepad mr-3"></i>Game Center
+                </div>
+                <div class="sidebar-item px-6 py-3 text-theme" onclick="showPage('exhibitions')">
+                    <i class="fas fa-images mr-3"></i>Pameran
+                </div>
+                <div class="sidebar-item px-6 py-3 text-theme" onclick="showPage('tiktok')">
+                    <i class="fab fa-tiktok mr-3"></i>TikTok
+                </div>
+                <div class="sidebar-item px-6 py-3 text-theme" onclick="showPage('folders')">
+                    <i class="fas fa-folder mr-3"></i>File Manager
+                </div>
+                <div class="sidebar-item px-6 py-3 text-theme" onclick="showPage('spotify')">
+                    <i class="fab fa-spotify mr-3"></i>Spotify
+                </div>
+                <div class="sidebar-item px-6 py-3 text-theme" onclick="showPage('messages')">
+                    <i class="fas fa-envelope mr-3"></i>Pesan
+                </div>
+                <div class="sidebar-item px-6 py-3 text-theme" onclick="showPage('mountains')">
+                    <i class="fas fa-mountain mr-3"></i>Pendakian Gunung
+                </div>
+                <div class="sidebar-item px-6 py-3 text-theme" onclick="showPage('profile')">
+                    <i class="fas fa-user mr-3"></i>Profil
+                </div>
+                <div id="adminMenuItem" class="sidebar-item px-6 py-3 text-theme hidden" onclick="showPage('admin')">
+                    <i class="fas fa-cog mr-3"></i>Panel Admin
+                </div>
+            </nav>
+            
+            <div class="absolute bottom-0 w-64 p-6 border-t border-theme">
+                <button onclick="logout()" class="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-200">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Keluar
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 bg-theme">
+            <!-- Header -->
+            <header class="bg-theme-secondary border-b border-theme p-4 shadow-sm">
+                <div class="flex justify-between items-center">
+                    <h2 id="pageTitle" class="text-2xl font-semibold text-theme">Beranda</h2>
+                    <div class="flex items-center space-x-4">
+                        <select id="themeSelector" onchange="changeTheme()" class="px-3 py-2 border border-theme rounded-lg bg-theme text-theme">
+                            <option value="light">🌞 Terang</option>
+                            <option value="dark">🌙 Gelap</option>
+                            <option value="ocean">🌊 Ocean</option>
+                            <option value="forest">🌲 Forest</option>
+                            <option value="sunset">🌅 Sunset</option>
+                            <option value="purple">💜 Purple</option>
+                        </select>
+                        <div class="flex items-center space-x-2">
+                            <span id="headerUserName" class="text-theme font-medium">User</span>
+                            <span id="userStatusBadge" class="px-2 py-1 rounded-full text-xs font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="p-6">
+                <!-- Beranda Page -->
+                <div id="berandaPage" class="page-content">
+                    <div class="max-w-4xl mx-auto">
+                        <!-- User Status Card -->
+                        <div class="bg-theme-secondary rounded-xl shadow-lg p-6 mb-8">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4">
+                                        <span id="homeUserInitial">U</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-semibold text-theme" id="homeUserName">User</h3>
+                                        <p class="text-theme-secondary" id="homeUserEmail">user@email.com</p>
+                                        <div class="flex items-center space-x-2 mt-1">
+                                            <span class="text-sm text-theme-secondary">Status:</span>
+                                            <span id="homeUserStatus" class="px-3 py-1 rounded-full text-sm font-medium">Member</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div id="homeStatusIcon" class="text-4xl mb-2">👤</div>
+                                    <p class="text-sm text-theme-secondary">Member sejak</p>
+                                    <p class="text-sm font-medium text-theme" id="homeMemberSince">2024</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Welcome Card -->
+                        <div class="bg-theme-secondary rounded-xl shadow-lg p-8 mb-8">
+                            <h3 class="text-2xl font-semibold text-theme mb-6">Selamat Datang di Lenzxy</h3>
+                            <div class="grid md:grid-cols-3 gap-6">
+                                <div class="bg-blue-100 rounded-lg p-6 text-center">
+                                    <i class="fas fa-gamepad text-4xl text-blue-600 mb-4"></i>
+                                    <h4 class="text-lg font-semibold text-gray-800">Game Center</h4>
+                                    <p class="text-gray-600 text-sm">Koleksi game menarik</p>
+                                </div>
+                                <div class="bg-purple-100 rounded-lg p-6 text-center">
+                                    <i class="fas fa-images text-4xl text-purple-600 mb-4"></i>
+                                    <h4 class="text-lg font-semibold text-gray-800">Pameran Digital</h4>
+                                    <p class="text-gray-600 text-sm">Galeri multimedia</p>
+                                </div>
+                                <div class="bg-green-100 rounded-lg p-6 text-center">
+                                    <i class="fas fa-cog text-4xl text-green-600 mb-4"></i>
+                                    <h4 class="text-lg font-semibold text-gray-800">Panel Admin</h4>
+                                    <p class="text-gray-600 text-sm">Kelola semua konten</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Platform Features -->
+                        <div class="bg-theme-secondary rounded-xl shadow-lg p-6">
+                            <h4 class="text-lg font-semibold text-theme mb-4 flex items-center">
+                                <i class="fas fa-star text-blue-500 mr-2"></i>Fitur Platform
+                            </h4>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="bg-green-50 rounded-lg p-4">
+                                    <h5 class="font-semibold text-green-800 mb-2">✅ Registrasi & Login</h5>
+                                    <p class="text-green-700 text-sm">Sistem autentikasi yang stabil dan aman</p>
+                                </div>
+                                <div class="bg-blue-50 rounded-lg p-4">
+                                    <h5 class="font-semibold text-blue-800 mb-2">🎮 Game Center</h5>
+                                    <p class="text-blue-700 text-sm">Koleksi game dan hiburan digital</p>
+                                </div>
+                                <div class="bg-purple-50 rounded-lg p-4">
+                                    <h5 class="font-semibold text-purple-800 mb-2">🖼️ Pameran Digital</h5>
+                                    <p class="text-purple-700 text-sm">Galeri multimedia dan konten kreatif</p>
+                                </div>
+                                <div class="bg-orange-50 rounded-lg p-4">
+                                    <h5 class="font-semibold text-orange-800 mb-2">⚙️ Panel Admin</h5>
+                                    <p class="text-orange-700 text-sm">Kelola pengguna dan konten platform</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Page -->
+                <div id="profilePage" class="page-content hidden">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="bg-theme-secondary rounded-xl shadow-lg p-6">
+                            <h3 class="text-xl font-semibold text-theme mb-6 flex items-center">
+                                <i class="fas fa-user mr-3 text-blue-500"></i>Informasi Profil
+                            </h3>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-center">
+                                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4">
+                                        <span id="profileInitial">U</span>
+                                    </div>
+                                    <div>
+                                        <h4 id="profileName" class="text-lg font-semibold text-theme">User</h4>
+                                        <p id="profileEmail" class="text-theme-secondary">user@email.com</p>
+                                        <div id="profileStatus" class="mt-1"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="border-t border-theme pt-4">
+                                    <div class="grid grid-cols-2 gap-4 text-sm">
+                                        <div>
+                                            <span class="text-theme-secondary">Status:</span>
+                                            <span id="profileMembershipStatus" class="font-medium text-theme ml-2">Member</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-theme-secondary">Login Terakhir:</span>
+                                            <span id="profileLastLogin" class="font-medium text-theme ml-2">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Profile Edit Form -->
+                                <div id="profileEditForm" class="border-t border-theme pt-4">
+                                    <h5 class="font-medium text-theme mb-3">Edit Profil</h5>
+                                    <form onsubmit="updateProfile(event)">
+                                        <div class="space-y-3">
+                                            <div>
+                                                <label class="block text-theme text-sm font-medium mb-1">Email Baru</label>
+                                                <input type="email" id="newEmail" class="w-full px-3 py-2 border border-theme rounded-lg bg-theme text-theme text-sm">
+                                            </div>
+                                            <div>
+                                                <label class="block text-theme text-sm font-medium mb-1">Password Baru</label>
+                                                <input type="password" id="newPassword" class="w-full px-3 py-2 border border-theme rounded-lg bg-theme text-theme text-sm">
+                                            </div>
+                                            <button type="submit" id="updateProfileBtn" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200 text-sm">
+                                                Update Profil
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Page -->
+                <div id="adminPage" class="page-content hidden">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="bg-theme-secondary rounded-xl shadow-lg p-6">
+                            <h3 class="text-xl font-semibold text-theme mb-4">Daftar Pengguna</h3>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="border-b border-theme">
+                                            <th class="text-left py-2 text-theme">No</th>
+                                            <th class="text-left py-2 text-theme">Nama</th>
+                                            <th class="text-left py-2 text-theme">Email</th>
+                                            <th class="text-left py-2 text-theme">Password</th>
+                                            <th class="text-left py-2 text-theme">Role</th>
+                                            <th class="text-left py-2 text-theme">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersList">
+                                        <!-- Users will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Pages (Games, Exhibitions, etc.) -->
+                <div id="gamesPage" class="page-content hidden">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="bg-theme-secondary rounded-xl shadow-lg p-8">
+                            <h3 class="text-2xl font-semibold text-theme mb-6 flex items-center">
+                                <i class="fas fa-gamepad mr-3 text-green-500"></i>Game Center
+                            </h3>
+                            <div class="text-center py-16 text-theme-secondary">
+                                <i class="fas fa-gamepad text-6xl mb-4 opacity-50"></i>
+                                <p class="text-xl">Game Center</p>
+                                <p class="text-sm mt-2">Fitur game akan ditambahkan segera!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="exhibitionsPage" class="page-content hidden">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="bg-theme-secondary rounded-xl shadow-lg p-8">
+                            <h3 class="text-2xl font-semibold text-theme mb-6 flex items-center">
+                                <i class="fas fa-images mr-3 text-purple-500"></i>Pameran Digital
+                            </h3>
+                            <div class="text-center py-16 text-theme-secondary">
+                                <i class="fas fa-images text-6xl mb-4 opacity-50"></i>
+                                <p class="text-xl">Pameran Digital</p>
+                                <p class="text-sm mt-2">Galeri pameran akan ditambahkan segera!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tiktokPage" class="page-content hidden">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="bg-theme-secondary rounded-xl shadow-lg p-8">
+                            <h3 class="text-2xl font-semibold text-theme mb-6 flex items-center">
+                                <i class="fab fa-tiktok mr-3 text-pink-500"></i>TikTok Profiles
+                            </h3>
+                            <div class="text-center py-16 text-theme-secondary">
+                                <i class="fab fa-tiktok text-6xl mb-4 opacity-50"></i>
+                                <p class="text-xl">TikTok Profiles</p>
+                                <p class="text-sm mt-2">Profil TikTok akan ditambahkan segera!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="foldersPage" class="page-content hidden">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="bg-theme-secondary rounded-xl shadow-lg p-8">
+                            <h3 class="text-2xl font-semibold text-theme mb-6 flex items-center">
+                                <i class="fas fa-folder mr-3 text-yellow-500"></i>File Manager
+                            </h3>
+                            <div class="text-center py-16 text-theme-secondary">
+                                <i class="fas fa-folder text-6xl mb-4 opacity-50"></i>
+                                <p class="text-xl">File Manager</p>
+                                <p class="text-sm mt-2">File manager akan ditambahkan segera!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="spotifyPage" class="page-content hidden">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="bg-theme-secondary rounded-xl shadow-lg p-8">
+                            <h3 class="text-2xl font-semibold text-theme mb-6 flex items-center">
+                                <i class="fab fa-spotify mr-3 text-green-500"></i>Spotify Music
+                            </h3>
+                            <div class="text-center py-16 text-theme-secondary">
+                                <i class="fab fa-spotify text-6xl mb-4 opacity-50"></i>
+                                <p class="text-xl">Spotify Music</p>
+                                <p class="text-sm mt-2">Koleksi musik akan ditambahkan segera!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="messagesPage" class="page-content hidden">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="bg-theme-secondary rounded-xl shadow-lg p-8">
+                            <h3 class="text-2xl font-semibold text-theme mb-6 flex items-center">
+                                <i class="fas fa-envelope mr-3 text-blue-500"></i>Pesan
+                            </h3>
+                            <div class="text-center py-16 text-theme-secondary">
+                                <i class="fas fa-envelope text-6xl mb-4 opacity-50"></i>
+                                <p class="text-xl">Sistem Pesan</p>
+                                <p class="text-sm mt-2">Fitur pesan akan ditambahkan segera!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mountainsPage" class="page-content hidden">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="bg-theme-secondary rounded-xl shadow-lg p-8">
+                            <h3 class="text-2xl font-semibold text-theme mb-6 flex items-center">
+                                <i class="fas fa-mountain mr-3 text-green-600"></i>Pendakian Gunung
+                            </h3>
+                            <div class="text-center py-16 text-theme-secondary">
+                                <i class="fas fa-mountain text-6xl mb-4 opacity-50"></i>
+                                <p class="text-xl">Pendakian Gunung</p>
+                                <p class="text-sm mt-2">Daftar gunung akan ditambahkan segera!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let currentTheme = 'light';
+        let currentPage = 'beranda';
+
+        // Simple user database (no VIP complications)
+        const users = [
+            { 
+                id: 1, 
+                name: 'Admin Zasa', 
+                email: 'zasa18@admin.id', 
+                password: 'saza21', 
+                isAdmin: true, 
+                isOnline: false, 
+                lastLogin: null 
+            },
+            { 
+                id: 2, 
+                name: 'Andi Pratama', 
+                email: 'andi@email.com', 
+                password: 'andi123', 
+                isAdmin: false, 
+                isOnline: false, 
+                lastLogin: null 
+            },
+            { 
+                id: 3, 
+                name: 'Sari Dewi', 
+                email: 'sari@email.com', 
+                password: 'sari123', 
+                isAdmin: false, 
+                isOnline: false, 
+                lastLogin: null 
+            }
+        ];
+
+        // Show register form
+        function showRegisterForm() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+        }
+
+        // Show login form
+        function showLoginForm() {
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+        }
+
+        // Register function - FIXED
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('registerName').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value.trim();
+            
+            // Validation
+            if (!name || !email || !password) {
+                alert('❌ Semua field harus diisi!');
+                return;
+            }
+            
+            if (name.length < 2) {
+                alert('❌ Nama minimal 2 karakter!');
+                return;
+            }
+            
+            if (password.length < 3) {
+                alert('❌ Password minimal 3 karakter!');
+                return;
+            }
+            
+            // Check if email already exists
+            if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+                alert('❌ Email sudah terdaftar! Gunakan email lain.');
+                return;
+            }
+            
+            // Create new user - SIMPLE STRUCTURE
+            const newUser = {
+                id: users.length + 1,
+                name: name,
+                email: email.toLowerCase(),
+                password: password,
+                isAdmin: false,
+                isOnline: false,
+                lastLogin: null
+            };
+            
+            users.push(newUser);
+            
+            // Clear form
+            document.getElementById('registerName').value = '';
+            document.getElementById('registerEmail').value = '';
+            document.getElementById('registerPassword').value = '';
+            
+            // Show login form
+            showLoginForm();
+            
+            // Success message
+            alert(`✅ Akun berhasil dibuat!\n\n👤 Nama: ${name}\n📧 Email: ${email}\n\nSekarang Anda bisa login!`);
+            
+            // Auto-fill login form
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = password;
+        }
+
+        // Login function - FIXED
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            
+            // Validation
+            if (!email || !password) {
+                alert('❌ Email dan password harus diisi!');
+                return;
+            }
+            
+            // Find user
+            const user = users.find(u => 
+                u.email.toLowerCase() === email.toLowerCase() && 
+                u.password === password
+            );
+            
+            if (user) {
+                // Set current user
+                currentUser = user;
+                user.isOnline = true;
+                user.lastLogin = new Date().toLocaleString('id-ID');
+                
+                // Hide login screen and show main app
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                
+                // Update UI
+                document.getElementById('headerUserName').textContent = user.name;
+                document.getElementById('userWelcome').textContent = `Selamat datang, ${user.name}!`;
+                
+                // Update status badge
+                updateUserStatusBadge();
+                
+                // Show admin menu if admin
+                if (user.isAdmin) {
+                    document.getElementById('adminMenuItem').classList.remove('hidden');
+                }
+                
+                // Load data
+                loadUsersList();
+                loadProfileInfo();
+                loadHomeUserInfo();
+                
+                // Clear form
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+                
+                // Success message
+                const statusText = user.isAdmin ? '🛡️ Administrator' : '👤 Member';
+                alert(`🎉 Login berhasil!\n\nSelamat datang, ${user.name}!\n\n📊 Status: ${statusText}`);
+                
+            } else {
+                alert('❌ Login gagal!\n\nEmail atau password salah.');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            if (currentUser) {
+                currentUser.isOnline = false;
+            }
+            currentUser = null;
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('adminMenuItem').classList.add('hidden');
+        }
+
+        // Show page function
+        function showPage(page) {
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
+            
+            // Show selected page
+            const pageElement = document.getElementById(page + 'Page');
+            if (pageElement) {
+                pageElement.classList.remove('hidden');
+            }
+            
+            // Update page title
+            const titles = {
+                'beranda': 'Beranda',
+                'games': 'Game Center',
+                'exhibitions': 'Pameran Digital',
+                'tiktok': 'TikTok Profiles',
+                'folders': 'File Manager',
+                'spotify': 'Spotify Music',
+                'mountains': 'Pendakian Gunung',
+                'messages': 'Pesan',
+                'profile': 'Profil',
+                'admin': 'Panel Admin'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || page;
+            
+            // Update active sidebar item
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            currentPage = page;
+        }
+
+        // Load users list for admin
+        function loadUsersList() {
+            const usersList = document.getElementById('usersList');
+            if (!usersList) return;
+            
+            usersList.innerHTML = '';
+            
+            users.forEach((user, index) => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-theme hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="py-2 text-theme">${index + 1}</td>
+                    <td class="py-2 text-theme">${user.name}</td>
+                    <td class="py-2 text-theme">${user.email}</td>
+                    <td class="py-2 text-theme font-mono text-sm">${user.password}</td>
+                    <td class="py-2">
+                        <span class="px-2 py-1 rounded-full text-xs ${user.isAdmin ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}">
+                            ${user.isAdmin ? 'Admin' : 'Member'}
+                        </span>
+                    </td>
+                    <td class="py-2">
+                        <span class="px-2 py-1 rounded-full text-xs ${user.isOnline ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                            ${user.isOnline ? 'Online' : 'Offline'}
+                        </span>
+                    </td>
+                `;
+                usersList.appendChild(row);
+            });
+        }
+
+        // Update profile function
+        function updateProfile(event) {
+            event.preventDefault();
+            
+            const newEmail = document.getElementById('newEmail').value.trim();
+            const newPassword = document.getElementById('newPassword').value.trim();
+            
+            if (!newEmail && !newPassword) {
+                alert('Masukkan email atau password baru untuk update profil.');
+                return;
+            }
+            
+            if (newEmail) {
+                // Check if email already exists
+                const emailExists = users.some(u => u.email.toLowerCase() === newEmail.toLowerCase() && u.id !== currentUser.id);
+                if (emailExists) {
+                    alert('Email sudah digunakan oleh pengguna lain.');
+                    return;
+                }
+                
+                currentUser.email = newEmail.toLowerCase();
+                document.getElementById('profileEmail').textContent = newEmail;
+                document.getElementById('homeUserEmail').textContent = newEmail;
+            }
+            
+            if (newPassword) {
+                if (newPassword.length < 3) {
+                    alert('Password minimal 3 karakter.');
+                    return;
+                }
+                currentUser.password = newPassword;
+            }
+            
+            // Clear form
+            document.getElementById('newEmail').value = '';
+            document.getElementById('newPassword').value = '';
+            
+            alert('✅ Profil berhasil diupdate!');
+            loadUsersList(); // Refresh admin users list
+        }
+
+        // Load profile info
+        function loadProfileInfo() {
+            if (!currentUser) return;
+            
+            document.getElementById('profileName').textContent = currentUser.name;
+            document.getElementById('profileEmail').textContent = currentUser.email;
+            document.getElementById('profileInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('profileMembershipStatus').textContent = currentUser.isAdmin ? 'Administrator' : 'Member';
+            document.getElementById('profileLastLogin').textContent = currentUser.lastLogin || '-';
+        }
+
+        // Load home user info
+        function loadHomeUserInfo() {
+            if (!currentUser) return;
+            
+            document.getElementById('homeUserName').textContent = currentUser.name;
+            document.getElementById('homeUserEmail').textContent = currentUser.email;
+            document.getElementById('homeUserInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+            
+            const statusElement = document.getElementById('homeUserStatus');
+            const iconElement = document.getElementById('homeStatusIcon');
+            
+            if (currentUser.isAdmin) {
+                statusElement.className = 'px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800';
+                statusElement.textContent = 'Administrator';
+                iconElement.textContent = '🛡️';
+            } else {
+                statusElement.className = 'px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800';
+                statusElement.textContent = 'Member';
+                iconElement.textContent = '👤';
+            }
+        }
+
+        // Update user status badge
+        function updateUserStatusBadge() {
+            const badge = document.getElementById('userStatusBadge');
+            if (currentUser.isAdmin) {
+                badge.className = 'px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800';
+                badge.textContent = 'Admin';
+            } else {
+                badge.className = 'px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800';
+                badge.textContent = 'Member';
+            }
+        }
+
+        // Theme change function
+        function changeTheme() {
+            const theme = document.getElementById('themeSelector').value;
+            document.body.className = `theme-${theme}`;
+            currentTheme = theme;
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Lenzxy Platform Loaded - Clean Version');
+            console.log('📊 Total Users:', users.length);
+            console.log('🔑 Admin Login: zasa18@admin.id / saza21');
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9999a2ef4520659e',t:'MTc2MjMxNzI0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
